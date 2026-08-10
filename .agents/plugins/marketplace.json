@@ -1,0 +1,20 @@
+{
+  "name": "pastor-sermon-ai",
+  "interface": {
+    "displayName": "Pastor Sermon AI"
+  },
+  "plugins": [
+    {
+      "name": "sermon-slide-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/sermon-slide-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

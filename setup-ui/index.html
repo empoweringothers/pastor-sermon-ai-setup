@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta id="theme-color" name="theme-color" content="#f5f5f7">
+    <meta name="description" content="A one-step-at-a-time setup companion for Pastor Sermon AI.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23001e4b'/%3E%3Cpath d='M16 6v20M9 13h14' stroke='%23f8f0e1' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+    <title>Pastor Sermon AI Setup</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./config.js" defer></script>
+    <script src="./release-data.js" defer></script>
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <svg class="svg-library" aria-hidden="true" focusable="false">
+      <symbol id="icon-arrow-up-right" viewBox="0 0 24 24">
+        <path d="M7 17 17 7M8 7h9v9" />
+      </symbol>
+      <symbol id="icon-check" viewBox="0 0 24 24">
+        <path d="m6.5 12.5 3.4 3.4 7.7-8" />
+      </symbol>
+      <symbol id="icon-chevron" viewBox="0 0 24 24">
+        <path d="m9 6 6 6-6 6" />
+      </symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24">
+        <path d="m7 7 10 10M17 7 7 17" />
+      </symbol>
+      <symbol id="icon-copy" viewBox="0 0 24 24">
+        <rect x="8" y="8" width="10" height="10" rx="2" />
+        <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" />
+      </symbol>
+      <symbol id="icon-help" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M9.7 9a2.5 2.5 0 0 1 4.8 1c0 1.7-2.5 2.1-2.5 3.7M12 17.4h.01" />
+      </symbol>
+      <symbol id="icon-lock" viewBox="0 0 24 24">
+        <rect x="5" y="10" width="14" height="10" rx="3" />
+        <path d="M8.5 10V7.5a3.5 3.5 0 0 1 7 0V10" />
+      </symbol>
+      <symbol id="icon-pin" viewBox="0 0 24 24">
+        <path d="m9 4 6 0-.8 5 2.8 2.7v1.8H7v-1.8L9.8 9 9 4ZM12 13.5V21" />
+      </symbol>
+      <symbol id="icon-reset" viewBox="0 0 24 24">
+        <path d="M4.5 9A8 8 0 1 1 5 16M4.5 9V4.5M4.5 9H9" />
+      </symbol>
+      <symbol id="icon-shield" viewBox="0 0 32 38">
+        <path d="M16 1.5 29 6v10.2c0 9.3-5.8 16.5-13 20.3C8.8 32.7 3 25.5 3 16.2V6l13-4.5Z" />
+        <path d="M16 8v20M9.5 14.5h13" />
+      </symbol>
+      <symbol id="icon-spark" viewBox="0 0 24 24">
+        <path d="M12 2.5c.7 5.2 3.3 7.8 8.5 8.5-5.2.7-7.8 3.3-8.5 8.5-.7-5.2-3.3-7.8-8.5-8.5 5.2-.7 7.8-3.3 8.5-8.5Z" />
+      </symbol>
+      <symbol id="icon-warning" viewBox="0 0 24 24">
+        <path d="M10.4 4.2 2.8 17.4A1.8 1.8 0 0 0 4.4 20h15.2a1.8 1.8 0 0 0 1.6-2.6L13.6 4.2a1.8 1.8 0 0 0-3.2 0Z" />
+        <path d="M12 9v4.5M12 17h.01" />
+      </symbol>
+    </svg>
+
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+
+    <main class="app-window" aria-labelledby="app-title">
+      <header class="titlebar">
+        <div class="window-dots" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <p class="titlebar-name">Setup Companion</p>
+        <button class="help-button" id="open-help" type="button" aria-haspopup="dialog" aria-label="Ask Setup Help">
+          <svg aria-hidden="true"><use href="#icon-help"></use></svg>
+          <span>Ask Setup Help</span>
+        </button>
+      </header>
+
+      <div class="app-body">
+        <aside class="sidebar" aria-label="Pastor Sermon AI">
+          <div class="brand-lockup">
+            <span class="brand-mark" aria-hidden="true">
+              <svg><use href="#icon-shield"></use></svg>
+            </span>
+            <div>
+              <p class="brand-kicker">Valley Forge Baptist</p>
+              <h1 id="app-title">Pastor Sermon AI</h1>
+            </div>
+          </div>
+
+          <div class="sidebar-selection" aria-current="page">
+            <span class="selection-icon" aria-hidden="true">
+              <svg><use href="#icon-spark"></use></svg>
+            </span>
+            <span>
+              <strong>Computer Setup</strong>
+              <small>One action at a time</small>
+            </span>
+          </div>
+
+          <div class="sidebar-context">
+            <p class="sidebar-label">This device</p>
+            <div class="device-summary" id="device-summary">
+              <span class="device-symbol" id="device-symbol" aria-hidden="true">—</span>
+              <span>
+                <strong id="device-name">Not chosen</strong>
+                <small id="save-state-label">Progress saves here</small>
+              </span>
+            </div>
+          </div>
+
+          <div class="sidebar-note">
+            <svg aria-hidden="true"><use href="#icon-shield"></use></svg>
+            <p><strong>Setup only.</strong> No sermon files, passwords, or API keys belong here.</p>
+          </div>
+
+          <button class="reset-button" id="open-reset" type="button" aria-haspopup="dialog">
+            <svg aria-hidden="true"><use href="#icon-reset"></use></svg>
+            Reset this launcher
+          </button>
+        </aside>
+
+        <section class="main-panel" aria-label="Current setup action">
+          <div class="status-region">
+            <div class="status-heading">
+              <p>Setup status</p>
+              <span id="save-indicator"><span aria-hidden="true"></span> Saved on this device</span>
+            </div>
+            <ol class="status-strip" id="status-strip" aria-label="Setup categories">
+              <li data-status="chatgpt">
+                <span class="status-dot" aria-hidden="true"></span>
+                <span><strong>ChatGPT</strong><small>Current</small></span>
+              </li>
+            </ol>
+          </div>
+
+          <div class="configuration-alert" id="configuration-alert" role="status" hidden>
+            <svg aria-hidden="true"><use href="#icon-warning"></use></svg>
+            <div>
+              <strong>Preview build — release details not configured</strong>
+              <p id="configuration-message"><code>RELEASE.json</code> must contain the finished publisher, tagged release URL, and full commit before this page is shared.</p>
+            </div>
+          </div>
+
+          <section class="action-stage" id="action-stage" aria-labelledby="current-action-title"></section>
+
+          <noscript>
+            <div class="noscript-card">
+              <strong>JavaScript is turned off.</strong>
+              This companion needs JavaScript to remember the current action on this device.
+            </div>
+          </noscript>
+        </section>
+      </div>
+    </main>
+
+    <dialog class="drawer-dialog" id="help-dialog" aria-labelledby="help-title">
+      <div class="drawer-shell">
+        <header class="drawer-header">
+          <div>
+            <p class="drawer-kicker">Prompt maker</p>
+            <h2 id="help-title">Ask Setup Help</h2>
+          </div>
+          <button class="icon-button" type="button" data-close-dialog="help-dialog" aria-label="Close setup help">
+            <svg aria-hidden="true"><use href="#icon-close"></use></svg>
+          </button>
+        </header>
+
+        <div class="not-live-chat">
+          <svg aria-hidden="true"><use href="#icon-copy"></use></svg>
+          <p><strong>This is not a live chat.</strong> Your question stays on this device. First we copy a support prompt. Then you choose when to open ChatGPT. No API key is used.</p>
+        </div>
+
+        <div class="context-card" aria-label="Prompt context">
+          <span>
+            <small>Computer</small>
+            <strong id="help-os">Not chosen</strong>
+          </span>
+          <span>
+            <small>Current action</small>
+            <strong id="help-step">Choose a computer</strong>
+          </span>
+        </div>
+
+        <form id="help-form" novalidate>
+          <label for="help-question">What is stopping you?</label>
+          <textarea id="help-question" name="question" rows="6" maxlength="1200" placeholder="Example: I do not see the button shown in ChatGPT." aria-describedby="help-hint help-error"></textarea>
+          <div class="field-meta">
+            <p id="help-hint">Do not include passwords, codes, or private church files.</p>
+            <span id="question-count" aria-hidden="true">0 / 1200</span>
+          </div>
+          <p class="field-error" id="help-error" role="alert"></p>
+          <button class="primary-button full-width" type="submit">
+            <svg aria-hidden="true"><use href="#icon-copy"></use></svg>
+            Copy help prompt
+          </button>
+          <p class="help-copy-status" id="help-copy-status" role="status" hidden>Help prompt copied. Your next action is ready.</p>
+        </form>
+
+        <a class="fallback-link" id="chatgpt-fallback" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" hidden>Open ChatGPT</a>
+      </div>
+    </dialog>
+
+    <dialog class="confirm-dialog" id="reset-dialog" aria-labelledby="reset-title" aria-describedby="reset-description">
+      <div class="confirm-shell">
+        <span class="confirm-icon" aria-hidden="true">
+          <svg><use href="#icon-reset"></use></svg>
+        </span>
+        <h2 id="reset-title">Reset this launcher?</h2>
+        <p id="reset-description">This clears only the computer choice and handoff saved in this browser. It does not reset ChatGPT's setup record or remove software or files.</p>
+        <div class="confirm-actions">
+          <button class="secondary-button" type="button" data-close-dialog="reset-dialog">Keep progress</button>
+          <button class="danger-button" id="confirm-reset" type="button">Reset launcher</button>
+        </div>
+      </div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden>
+      <svg aria-hidden="true"><use href="#icon-check"></use></svg>
+      <span id="toast-message"></span>
+    </div>
+  </body>
+</html>

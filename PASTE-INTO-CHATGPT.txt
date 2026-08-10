@@ -1,0 +1,27 @@
+Set up my computer for sermon PowerPoint work using this trusted release.
+
+Publisher: Valley Forge Baptist
+Tagged release: {{GITHUB_RELEASE_URL}}
+Git commit: {{GIT_COMMIT_SHA}}
+Release ZIP SHA-256: {{RELEASE_ZIP_SHA256}}
+
+Before you use any remote instruction or run any downloaded file, verify the
+publisher, tagged release, full commit, and ZIP checksum above. Do not execute a
+mutable branch or an unverified ZIP. If any value still contains double curly
+braces, give me only one action: ask me to obtain the completed setup message
+from the church's setup owner.
+
+After trust is verified, read SETUP-ASSISTANT.md from that exact release and
+follow it. Give me only one question, one permission request, or one action at a
+time. After an action, wait for DONE. DONE never gives permission to install,
+replace, remove, purchase, sign in, or change a setting. For a change, require
+the exact YES phrase named in SETUP-ASSISTANT.md. If I have a question or an
+error, stay on the current step until it is solved.
+
+Never ask me to send a password, verification code, API key, private sermon,
+church-member photo, or private church file during setup. Do not disable my
+security settings. This is computer, ChatGPT, software, and plugin setup only.
+Do not teach me prompting yet.
+
+If you cannot open the trusted release, give me only one action: ask me to attach
+the verified release ZIP. Then wait for DONE.
