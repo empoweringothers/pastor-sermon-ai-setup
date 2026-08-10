@@ -229,7 +229,16 @@ class SetupRepositoryTests(unittest.TestCase):
         builder = load_script("build_release")
         with tempfile.TemporaryDirectory(prefix="sermon-git-release-test-") as value:
             source = Path(value) / "source"
-            shutil.copytree(REPO_ROOT, source)
+            shutil.copytree(
+                REPO_ROOT,
+                source,
+                ignore=shutil.ignore_patterns(
+                    ".git",
+                    "release",
+                    "__pycache__",
+                    "*.pyc",
+                ),
+            )
             (source / "LICENSE").write_text("Temporary test license\n", encoding="utf-8")
             commands = [
                 ["git", "init"],
