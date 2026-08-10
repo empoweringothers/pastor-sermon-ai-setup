@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare sermon SL cues with visible text in a PowerPoint deck."""
+"""Compare sermon SL/Slide cues with visible text in a PowerPoint deck."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import argparse
 from difflib import SequenceMatcher
 from pathlib import Path
 import sys
-from typing import Any
+from typing import Any, Optional, Union
 
 from sermon_io import (
     extract_cues,
@@ -19,7 +19,9 @@ from sermon_io import (
 )
 
 
-def match_metrics(cue_text: str, slide_text: str) -> dict[str, float | int]:
+def match_metrics(
+    cue_text: str, slide_text: str
+) -> dict[str, Union[float, int]]:
     cue = normalize_for_match(cue_text)
     slide = normalize_for_match(slide_text)
     if not cue or not slide:
@@ -53,7 +55,7 @@ def classify_fidelity_status(
     media_only: bool,
     cue_type: str,
     score: float,
-    metrics: dict[str, float | int],
+    metrics: dict[str, Union[float, int]],
     extra_source_fraction: float,
 ) -> str:
     substantial_additions = (
@@ -79,7 +81,7 @@ def classify_fidelity_status(
 
 def align_cues_to_slides(
     cues: list[dict[str, Any]], slides: list[dict[str, Any]]
-) -> tuple[list[tuple[int, int | None, float]], list[int]]:
+) -> tuple[list[tuple[int, Optional[int], float]], list[int]]:
     """Order-preserving alignment with room for extra or missing slides."""
 
     cue_count = len(cues)
@@ -98,7 +100,7 @@ def align_cues_to_slides(
     ]
 
     dp = [[float("-inf")] * (slide_count + 1) for _ in range(cue_count + 1)]
-    back: list[list[str | None]] = [
+    back: list[list[Optional[str]]] = [
         [None] * (slide_count + 1) for _ in range(cue_count + 1)
     ]
     dp[0][0] = 0.0
@@ -133,7 +135,7 @@ def align_cues_to_slides(
             dp[cue_index][slide_index] = choices[operation]
             back[cue_index][slide_index] = operation
 
-    aligned: list[tuple[int, int | None, float]] = []
+    aligned: list[tuple[int, Optional[int], float]] = []
     unmatched_slides: list[int] = []
     cue_index = cue_count
     slide_index = slide_count
@@ -166,7 +168,7 @@ def align_cues_to_slides(
 def attach_continuation_slides(
     cues: list[dict[str, Any]],
     slides: list[dict[str, Any]],
-    aligned: list[tuple[int, int | None, float]],
+    aligned: list[tuple[int, Optional[int], float]],
     unmatched_slide_indexes: list[int],
 ) -> tuple[dict[int, list[int]], list[int]]:
     """Attach approved-looking split continuations to long or Scripture cues.
@@ -349,7 +351,7 @@ def audit(note: str, deck: str) -> dict[str, object]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Audit visible PowerPoint text against sermon SL cues."
+        description="Audit visible PowerPoint text against sermon SL/Slide cues."
     )
     parser.add_argument("note", help="Path to sermon note")
     parser.add_argument("deck", help="Path to .pptx")

@@ -1,4 +1,4 @@
 interface:
   display_name: "Create Sermon Slides"
-  short_description: "Build faithful decks with consistent Bible imagery"
-  default_prompt: "Use $create-sermon-slides to build this sermon PowerPoint and keep each recurring biblical character consistent within the sermon."
+  short_description: "Build sourced 16:9 or 32:9 sermon decks"
+  default_prompt: "Use $create-sermon-slides to turn my pasted notes or attached deck into the correct-size PowerPoint with sourced or consistent AI imagery."

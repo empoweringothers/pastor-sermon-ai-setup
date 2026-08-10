@@ -146,9 +146,16 @@ class SetupRepositoryTests(unittest.TestCase):
         profile = (skill_root / "references/church-style-profile.md").read_text(
             encoding="utf-8"
         )
+        vf_patterns = (
+            skill_root / "references/vf-service-deck-patterns.md"
+        ).read_text(encoding="utf-8")
         self.assertIn("Never place sermon words on top of", skill)
         self.assertIn("recent pastor-approved sermon PowerPoint", skill)
         self.assertIn("Never place sermon words over", profile)
+        self.assertIn("approximately `2560 × 704`", vf_patterns)
+        self.assertIn("text on the left and one picture on the right", vf_patterns)
+        self.assertIn("Sermon text never goes over a topical", vf_patterns)
+        self.assertIn("legacy", vf_patterns)
 
     def test_biblical_images_have_scoped_generation_and_character_continuity(self) -> None:
         skill_root = REPO_ROOT / "plugins/sermon-slide-builder/skills/create-sermon-slides"
@@ -156,18 +163,52 @@ class SetupRepositoryTests(unittest.TestCase):
         reference = (
             skill_root / "references/biblical-photorealistic-image-set.md"
         ).read_text(encoding="utf-8")
-        self.assertIn("point and first-level lettered subpoint only", skill)
+        self.assertIn("first-level lettered subpoint routed to AI", skill)
         self.assertIn("Peter must look like the same Peter", skill)
         self.assertIn("character-continuity.md", reference)
         self.assertIn("The first eligible sermon image becomes the visual", reference)
         self.assertIn("Do not add a separate character portrait", reference)
+        self.assertIn("clear production direction as a recorded", reference)
         self.assertIn("All sermon text stays in the PowerPoint's separate text region", reference)
         image_policy = (skill_root / "references/image-research-policy.md").read_text(
             encoding="utf-8"
         )
         self.assertNotIn("negative space for the sermon copy", image_policy)
         self.assertIn("reference-image and character", image_policy)
-        self.assertIn("eligible-heading count equals the generated-image count", skill)
+        self.assertIn("approved for AI generation equal the", skill)
+        self.assertIn("does not also receive an AI", reference)
+
+    def test_skill_routes_pasted_sermons_canvases_and_real_media(self) -> None:
+        skill_root = REPO_ROOT / "plugins/sermon-slide-builder/skills/create-sermon-slides"
+        skill = (skill_root / "SKILL.md").read_text(encoding="utf-8")
+        fidelity = (skill_root / "references/wording-fidelity.md").read_text(
+            encoding="utf-8"
+        )
+        image_policy = (skill_root / "references/image-research-policy.md").read_text(
+            encoding="utf-8"
+        )
+        profile = (skill_root / "references/church-style-profile.md").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("pasted directly into chat", skill)
+        self.assertIn("`SL` or full `Slide` marker", fidelity)
+        self.assertIn("**Sermon plus PPTX:**", skill)
+        self.assertIn("never edit the supplied source in place", skill)
+        self.assertIn("Never infer the canvas from filename", skill)
+        self.assertIn("16 by 4.5 inches", skill)
+        self.assertIn("separate PPTX files", skill)
+        self.assertIn("possible tomb location", skill)
+        self.assertIn("`conflict_review`", skill)
+        self.assertIn("`pastor_provided_asset`", skill)
+        self.assertIn("`pastor_supplied_placeholder`", skill)
+        self.assertIn("Possible site — identification disputed", skill)
+        self.assertIn("tracked `IMAGE NEEDED` placeholder", skill)
+        self.assertIn("search-result thumbnail", image_policy)
+        self.assertIn("IMAGE NEEDED: <description>", image_policy)
+        self.assertIn("Conflicting Visual Directions", image_policy)
+        self.assertIn("true 32:9 canvas", profile)
+        self.assertIn("separate decks", profile)
 
     def test_release_builder_stages_a_self_verifying_package(self) -> None:
         builder = load_script("build_release")

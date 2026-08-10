@@ -1,11 +1,16 @@
 # Wording Fidelity Contract
 
-The sermon note is the authority. Presentation work may clarify the visual
-hierarchy, but it must not become an unrequested rewrite of the sermon.
+The sermon source is the authority whether it was pasted directly into chat,
+attached as a note, or supplied in an existing PowerPoint. Presentation work
+may clarify the visual hierarchy, but it must not become an unrequested rewrite
+of the sermon.
 
 ## Slide Boundaries
 
-- Treat each case-insensitive `SL` marker as a requested slide boundary.
+- Treat each case-insensitive `SL` or full `Slide` marker as a requested slide
+  boundary, including separators such as `-`, `–`, `—`, or `:`.
+- Apply the same rule to pasted chat text and attached note files. Do not make a
+  pastor reformat pasted text that already has clear markers.
 - Preserve cue order.
 - Default to one slide per cue.
 - Permit one extra opener only when the existing series deck already contains

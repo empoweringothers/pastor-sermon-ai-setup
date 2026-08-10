@@ -9,6 +9,8 @@ Choose the visual route by what the image is claiming to be.
 | Church member, missionary, or local ministry event | Provided photo or approved church-drive asset | Do not guess identity from the web. |
 | Historical event used as evidence | Authentic archive/public-domain image when available | A reconstruction must be labeled illustration. |
 | Place, building, object, product, map, document, or screenshot | Authentic current/archival image | Do not fabricate evidence, logos, documents, or UI. |
+| Proposed, possible, or traditional biblical/historical site | Authentic current or archival location photograph | State the uncertainty in notes/handoff. If the slide identifies the site, use an approved editable qualifier beside the media; never label a debated site as proven. |
+| Pastor-owned or ministry image not yet supplied | Dedicated draft placeholder | Do not search for a lookalike or generate a substitute. |
 | Biblical scene or historical reconstruction | Realistic AI illustration is allowed | Label as AI-generated illustration; avoid claiming documentary accuracy. |
 | Abstract idea, metaphor, mood, or title graphic | Realistic AI illustration is allowed | Keep it visually believable but clearly illustrative in notes. |
 | Scripture, outline, quotation, or list | Usually no image or a restrained supporting visual | The words remain primary. |
@@ -17,6 +19,9 @@ Choose the visual route by what the image is claiming to be.
 
 - Browse the web for current events, news, public figures, current statistics,
   recent quotations, and facts that may have changed.
+- Use Google, Bing, or another image search only to discover candidates. Open
+  the original source page before using an image; a search-result thumbnail is
+  neither the authoritative source nor proof of usage rights.
 - Prefer primary and official sources. Use reputable reporting when the primary
   source does not supply a usable photograph or sufficient context.
 - Verify that a photograph depicts the exact named person/event and not a
@@ -30,6 +35,61 @@ Choose the visual route by what the image is claiming to be.
   usage right.
 - Use a screenshot only when the screenshot itself is evidence and the context
   is visible enough to understand it.
+- For a debated biblical location, distinguish `traditional site`, `proposed
+  site`, `possible site`, and `archaeologically established place`. Preserve
+  the pastor's wording on the slide. When the slide itself identifies the site,
+  add a small editable qualifier beside the media only after the pastor supplies
+  or approves it—for example `Traditional site`, `Proposed site`, or `Possible
+  site — identification disputed`. Keep that label in the PowerPoint layout,
+  never burned into the photograph. Record the fuller evidence and uncertainty
+  in speaker notes and flag an overconfident claim for review. Presenting the
+  photograph as the site counts as an identification even when the visible
+  sermon heading does not name the location.
+
+## Conflicting Visual Directions
+
+Do not resolve mixed routes by keyword precedence. If one cue matches more than
+one of these routes, record `conflict_review` and ask one short question before
+searching, generating, or editing:
+
+- authentic sourced evidence;
+- AI-generated illustration or reconstruction;
+- a pastor-provided asset already attached;
+- a pastor-supplied asset that is still missing and needs a placeholder.
+
+Examples that require clarification include `Use a real archival photo; make an
+AI image only if unavailable` and `AI edit of my church photo`. The second may
+also trigger the real-person privacy rule. Keep the slide pending until the
+pastor chooses a safe route.
+
+## Pastor-Supplied Image Placeholders
+
+Use a placeholder when the cue says the pastor will add the image, when an
+identifiable church image has not been supplied, or when the requested authentic
+image cannot be used with clear rights.
+
+- Put one neutral solid placeholder shape inside the final dedicated image
+  frame; never put it behind sermon text.
+- Use the short draft label `IMAGE NEEDED: <description>` so it cannot be
+  mistaken for completed media.
+- Add a speaker-note block with the required owner/source, subject, desired crop,
+  orientation, and deadline when known.
+- Add the same item to the delivery media-needed list.
+- Keep the placeholder editable and easy to replace without moving the sermon
+  text or rebuilding the slide.
+- Name the deck as a draft and do not call it service-ready until all required
+  placeholders are resolved or the pastor explicitly accepts a text-only slide.
+
+Use this speaker-note form:
+
+```text
+[Media needed]
+- Required image: <plain description>
+- Expected owner/source: <pastor/church/archive/other>
+- Frame and crop: <ratio, orientation, subject placement>
+- Status: awaiting pastor-supplied asset
+[/Media needed]
+```
 
 ## AI Image Generation
 
@@ -68,6 +128,7 @@ Use a block like:
 [Sources]
 - Photo: <creator/source>, <direct page URL>, accessed <YYYY-MM-DD>, <license/usage context>
 - Claim: <primary source>, <direct URL>, accessed <YYYY-MM-DD>
+- Site status: <proposed/traditional/possible/established>, <supporting source and URL>
 - [AI-generated illustration]: <tool/model if known>, prompt record <file or short identifier>
 [/Sources]
 ```
@@ -85,6 +146,11 @@ presentation context calls for it.
 - Inspect the full-resolution crop, not only a thumbnail.
 - Reject blurry, stretched, watermarked, misidentified, or contextually false
   images.
+- Reconcile every draft placeholder with the media-needed list and confirm it
+  occupies the final image frame without overlapping sermon text.
+- Confirm every visible label for a debated site is editable, outside the
+  photograph, and consistent with the source notes.
+- Confirm every `conflict_review` item has a recorded pastor decision.
 - Check that text remains readable on the stage background.
 - Confirm that an AI illustration cannot reasonably be mistaken for a real
   news photograph without the source notes.

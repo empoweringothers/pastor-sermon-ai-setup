@@ -13,6 +13,7 @@ import tempfile
 import unicodedata
 import zipfile
 from pathlib import Path
+from typing import Optional, Union
 from xml.etree import ElementTree as ET
 
 
@@ -26,6 +27,141 @@ MARKER_RE = re.compile(
     r"(?P<marker>s[l1i]|slide)(?=\s|[-–—:]|$)"
     r"\s*(?:[-–—:]+\s*)?(?P<cue>.*)$",
     re.IGNORECASE,
+)
+
+VISUAL_ROUTE_AI_ILLUSTRATION = "ai_illustration"
+VISUAL_ROUTE_AUTHENTIC_SOURCED_IMAGE = "authentic_sourced_image"
+VISUAL_ROUTE_PASTOR_PROVIDED_ASSET = "pastor_provided_asset"
+VISUAL_ROUTE_PASTOR_SUPPLIED_PLACEHOLDER = "pastor_supplied_placeholder"
+VISUAL_ROUTE_AUTOMATIC = "automatic"
+VISUAL_ROUTE_CONFLICT_REVIEW = "conflict_review"
+
+PLACEHOLDER_STATUS_NEEDED = "needed"
+PLACEHOLDER_STATUS_RECEIVED = "received"
+PLACEHOLDER_STATUS_REPLACED = "replaced"
+PLACEHOLDER_STATUS_WAIVED = "waived"
+PLACEHOLDER_STATUS_NOT_APPLICABLE = "not_applicable"
+
+VISUAL_NOUN_PATTERN = (
+    r"(?:images?|pictures?|photos?|photographs?|illustrations?|art|artworks?|"
+    r"visuals?|maps?|graphics?|screenshots?|videos?|clips?)"
+)
+HISTORICAL_LOCATION_PATTERN = (
+    r"(?:sites?|locations?|places?|routes?|tombs?|caves?)"
+)
+AI_TERM_PATTERN = r"(?:\bai\b|\ba\.i\.(?=\s|$)|\bartificial intelligence\b)"
+
+AI_VISUAL_RE = re.compile(
+    AI_TERM_PATTERN
+    + r".{0,40}\b"
+    + VISUAL_NOUN_PATTERN
+    + r"\b|\b"
+    + VISUAL_NOUN_PATTERN
+    + r"\b.{0,40}"
+    + AI_TERM_PATTERN
+    + r"|(?:\b(?:generate|generated|generative|create)\b.{0,40}\b"
+    + VISUAL_NOUN_PATTERN
+    + r"\b)|(?:\b"
+    + VISUAL_NOUN_PATTERN
+    + r"\b.{0,40}\b(?:generate|generated)\b)|(?:"
+    + AI_TERM_PATTERN
+    + r".{0,24}\b(?:realistic|photorealistic|cinematic|illustrated?|"
+    r"rendered?|scene|portrait|depiction|reconstruction)\b)",
+    re.IGNORECASE | re.DOTALL,
+)
+
+PASTOR_PROVIDED_ASSET_RE = re.compile(
+    r"(?:\b(?:attached|uploaded|supplied|provided)\b.{0,40}\b"
+    + VISUAL_NOUN_PATTERN
+    + r"\b)|(?:\b"
+    + VISUAL_NOUN_PATTERN
+    + r"\b.{0,40}\b(?:attached|uploaded|supplied|provided)\b)|"
+    r"(?:\b(?:my|our)(?:\s+[a-z0-9'-]+){0,3}\s+"
+    + VISUAL_NOUN_PATTERN
+    + r"\b)",
+    re.IGNORECASE | re.DOTALL,
+)
+
+PASTOR_SUPPLIED_PLACEHOLDER_RE = re.compile(
+    r"(?:\b(?:pastor|i|we)\b.{0,30}\b"
+    r"(?:add|provide|insert|supply|upload)\b.{0,30}\b"
+    + VISUAL_NOUN_PATTERN
+    + r"\b)|(?:\b"
+    + VISUAL_NOUN_PATTERN
+    + r"\b.{0,30}\b(?:pastor|i|we)\b.{0,30}\b"
+    r"(?:add|provide|insert|supply|upload)\b)|"
+    r"(?:\b"
+    + VISUAL_NOUN_PATTERN
+    + r"\b.{0,30}\b(?:will\s+be|to\s+be)\s+"
+    r"(?:added|provided|inserted|supplied|uploaded)\b)|"
+    r"(?:\b(?:leave|keep)\b.{0,30}\b(?:blank|empty)\b)|"
+    r"(?:\b(?:blank|empty)\b.{0,30}\b"
+    + VISUAL_NOUN_PATTERN
+    + r"\b)|(?:\b"
+    + VISUAL_NOUN_PATTERN
+    + r"\s+(?:needed|required|tbd)\b)|\bplaceholder\b",
+    re.IGNORECASE | re.DOTALL,
+)
+
+AUTHENTIC_VISUAL_RE = re.compile(
+    r"(?:\b(?:real|actual|authentic|archival|archive|documentary)\b.{0,40}\b"
+    + VISUAL_NOUN_PATTERN
+    + r"\b)|(?:\b"
+    + VISUAL_NOUN_PATTERN
+    + r"\b.{0,40}\b(?:real|actual|authentic|archival|archive|documentary)\b)|"
+    r"(?:\b(?:historical|historic)\s+(?:photo|photograph|image|map|"
+    r"document|artifact)\b)|"
+    r"(?:\b(?:google|search|find|source)\b.{0,40}\b"
+    + VISUAL_NOUN_PATTERN
+    + r"\b)|(?:\b(?:real|actual|authentic)\b.{0,40}\b"
+    + HISTORICAL_LOCATION_PATTERN
+    + r"\b)|(?:\b"
+    + HISTORICAL_LOCATION_PATTERN
+    + r"\b.{0,40}\b(?:real|actual|authentic)\b)",
+    re.IGNORECASE | re.DOTALL,
+)
+
+PLACEHOLDER_REPLACED_RE = re.compile(
+    r"\bplaceholder\b.{0,30}\b(?:replaced|filled|resolved)\b|"
+    r"\b(?:replaced|filled|resolved)\b.{0,30}\bplaceholder\b",
+    re.IGNORECASE | re.DOTALL,
+)
+PLACEHOLDER_WAIVED_RE = re.compile(
+    r"\b(?:no|without)\b.{0,20}\b"
+    + VISUAL_NOUN_PATTERN
+    + r"\b.{0,20}\b(?:needed|required)\b|"
+    r"\b(?:waive|waived)\b.{0,30}\b(?:image|media|placeholder)\b",
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def _compile_site_status_re(terms: str) -> re.Pattern:
+    return re.compile(
+        r"(?:\b(?:"
+        + terms
+        + r")\b.{0,50}\b"
+        + HISTORICAL_LOCATION_PATTERN
+        + r"\b)|(?:\b"
+        + HISTORICAL_LOCATION_PATTERN
+        + r"\b.{0,50}\b(?:"
+        + terms
+        + r")\b)",
+        re.IGNORECASE | re.DOTALL,
+    )
+
+
+SITE_REFERENCE_RE = re.compile(
+    r"\b(?:sites?|locations?|places?|routes?|tombs?|caves?)\b",
+    re.IGNORECASE,
+)
+SITE_DISPUTED_RE = _compile_site_status_re(r"disputed|contested|uncertain")
+SITE_POSSIBLE_RE = _compile_site_status_re(r"possible|possibly|perhaps")
+SITE_PROPOSED_RE = _compile_site_status_re(r"proposed|suggested|candidate")
+SITE_TRADITIONAL_RE = _compile_site_status_re(
+    r"traditional|traditionally|believed"
+)
+SITE_ESTABLISHED_RE = _compile_site_status_re(
+    r"established|confirmed|verified"
 )
 
 
@@ -87,7 +223,9 @@ def _run_text_converter(path: Path) -> str:
         return converted.read_text(encoding="utf-8", errors="replace")
 
 
-def read_note_paragraphs(path_value: str | os.PathLike[str]) -> list[str]:
+def read_note_paragraphs(
+    path_value: Union[str, os.PathLike[str]],
+) -> list[str]:
     path = Path(path_value).expanduser().resolve()
     if not path.exists():
         raise FileNotFoundError(path)
@@ -130,11 +268,77 @@ def _nearest_context(
     return result
 
 
+def _visual_route(cue: str) -> tuple[str, bool]:
+    """Return the requested visual route and whether its directions conflict.
+
+    ``realistic`` is only a style word, so an ``AI realistic image`` has one
+    route. In contrast, explicit combinations such as ``real archival photo;
+    AI only if unavailable`` retain the ambiguity for human review.
+    """
+
+    explicit_routes: list[str] = []
+    inactive_placeholder = bool(
+        PLACEHOLDER_REPLACED_RE.search(cue) or PLACEHOLDER_WAIVED_RE.search(cue)
+    )
+    for pattern, route in (
+        (AI_VISUAL_RE, VISUAL_ROUTE_AI_ILLUSTRATION),
+        (AUTHENTIC_VISUAL_RE, VISUAL_ROUTE_AUTHENTIC_SOURCED_IMAGE),
+        (PASTOR_PROVIDED_ASSET_RE, VISUAL_ROUTE_PASTOR_PROVIDED_ASSET),
+        (
+            PASTOR_SUPPLIED_PLACEHOLDER_RE,
+            VISUAL_ROUTE_PASTOR_SUPPLIED_PLACEHOLDER,
+        ),
+    ):
+        if route == VISUAL_ROUTE_PASTOR_SUPPLIED_PLACEHOLDER and inactive_placeholder:
+            continue
+        if pattern.search(cue):
+            explicit_routes.append(route)
+
+    if len(explicit_routes) > 1:
+        return VISUAL_ROUTE_CONFLICT_REVIEW, True
+    if explicit_routes:
+        return explicit_routes[0], False
+    if SITE_REFERENCE_RE.search(cue) and re.search(
+        r"\b(?:photos?|photographs?|maps?|documents?|artifacts?|screenshots?)\b",
+        cue,
+        re.IGNORECASE,
+    ):
+        return VISUAL_ROUTE_AUTHENTIC_SOURCED_IMAGE, False
+    return VISUAL_ROUTE_AUTOMATIC, False
+
+
+def _site_identification(cue: str) -> tuple[str, Optional[str]]:
+    for pattern, status, label in (
+        (SITE_DISPUTED_RE, "disputed", "Disputed site"),
+        (SITE_POSSIBLE_RE, "possible", "Possible site"),
+        (SITE_PROPOSED_RE, "proposed", "Proposed site"),
+        (SITE_TRADITIONAL_RE, "traditional", "Traditional site"),
+        (SITE_ESTABLISHED_RE, "established", None),
+    ):
+        if pattern.search(cue):
+            return status, label
+    if SITE_REFERENCE_RE.search(cue):
+        return "unknown", None
+    return "not_applicable", None
+
+
+def _placeholder_status(cue: str) -> str:
+    if PLACEHOLDER_REPLACED_RE.search(cue):
+        return PLACEHOLDER_STATUS_REPLACED
+    if PLACEHOLDER_WAIVED_RE.search(cue):
+        return PLACEHOLDER_STATUS_WAIVED
+    if PASTOR_SUPPLIED_PLACEHOLDER_RE.search(cue):
+        return PLACEHOLDER_STATUS_NEEDED
+    if PASTOR_PROVIDED_ASSET_RE.search(cue):
+        return PLACEHOLDER_STATUS_RECEIVED
+    return PLACEHOLDER_STATUS_NOT_APPLICABLE
+
+
 def classify_cue(cue: str, cue_number: int) -> dict[str, object]:
     lower = cue.casefold()
     if "video" in lower or "clip" in lower:
         cue_type = "video"
-    elif re.search(r"\b(pic|picture|photo|image|map|graphic|screenshot)\b", lower):
+    elif re.search(r"\b" + VISUAL_NOUN_PATTERN + r"\b", lower):
         cue_type = "image"
     elif re.search(r"\b[a-z]{2,}\.?\s+\d{1,3}:\d{1,3}", lower):
         cue_type = "scripture"
@@ -148,10 +352,7 @@ def classify_cue(cue: str, cue_number: int) -> dict[str, object]:
         cue_type = "text"
 
     media_terms = bool(
-        re.search(
-            r"\b(video|clip|pic|picture|photo|image|map|graphic|screenshot)\b",
-            lower,
-        )
+        re.search(r"\b" + VISUAL_NOUN_PATTERN + r"\b", lower)
     )
     current_terms = bool(
         re.search(
@@ -160,16 +361,37 @@ def classify_cue(cue: str, cue_number: int) -> dict[str, object]:
             lower,
         )
     )
+    visual_route, visual_route_conflict = _visual_route(cue)
+    site_status, uncertainty_label = _site_identification(cue)
+    historical_certainty_review = site_status in {
+        "traditional",
+        "proposed",
+        "possible",
+        "disputed",
+    }
     return {
         "cue_type": cue_type,
-        "contains_media_direction": media_terms,
-        "research_review_recommended": media_terms or current_terms,
+        "contains_media_direction": (
+            media_terms or visual_route != VISUAL_ROUTE_AUTOMATIC
+        ),
+        "visual_route_hint": visual_route,
+        "visual_route_conflict_review": visual_route_conflict,
+        "site_identification_status": site_status,
+        "visible_uncertainty_label": uncertainty_label,
+        "placeholder_status": _placeholder_status(cue),
+        "historical_certainty_review_recommended": historical_certainty_review,
+        "research_review_recommended": (
+            media_terms
+            or current_terms
+            or historical_certainty_review
+            or visual_route != VISUAL_ROUTE_AUTOMATIC
+        ),
     }
 
 
-def extract_cues(path_value: str | os.PathLike[str]) -> dict[str, object]:
-    path = Path(path_value).expanduser().resolve()
-    paragraphs = read_note_paragraphs(path)
+def _extract_cues_from_paragraphs(
+    paragraphs: list[str], source_label: str
+) -> dict[str, object]:
     cues: list[dict[str, object]] = []
     for paragraph_index, paragraph in enumerate(paragraphs):
         match = MARKER_RE.match(paragraph)
@@ -192,11 +414,25 @@ def extract_cues(path_value: str | os.PathLike[str]) -> dict[str, object]:
         cue_record.update(classify_cue(cue_text, cue_number))
         cues.append(cue_record)
     return {
-        "source_file": str(path),
+        "source_file": source_label,
         "paragraph_count": len(paragraphs),
         "cue_count": len(cues),
         "cues": cues,
     }
+
+
+def extract_cues_from_text(
+    text: str, source_label: str = "[pasted text]"
+) -> dict[str, object]:
+    """Extract complete cue records directly from pasted sermon text."""
+
+    return _extract_cues_from_paragraphs(text.splitlines(), source_label)
+
+
+def extract_cues(path_value: Union[str, os.PathLike[str]]) -> dict[str, object]:
+    path = Path(path_value).expanduser().resolve()
+    paragraphs = read_note_paragraphs(path)
+    return _extract_cues_from_paragraphs(paragraphs, str(path))
 
 
 def _slide_number(name: str) -> int:
@@ -204,7 +440,9 @@ def _slide_number(name: str) -> int:
     return int(match.group(1)) if match else 0
 
 
-def extract_pptx_slides(path_value: str | os.PathLike[str]) -> list[dict[str, object]]:
+def extract_pptx_slides(
+    path_value: Union[str, os.PathLike[str]],
+) -> list[dict[str, object]]:
     path = Path(path_value).expanduser().resolve()
     with zipfile.ZipFile(path) as archive:
         slide_names = sorted(
@@ -231,7 +469,7 @@ def extract_pptx_slides(path_value: str | os.PathLike[str]) -> list[dict[str, ob
     return slides
 
 
-def pptx_metadata(path_value: str | os.PathLike[str]) -> dict[str, object]:
+def pptx_metadata(path_value: Union[str, os.PathLike[str]]) -> dict[str, object]:
     path = Path(path_value).expanduser().resolve()
     with zipfile.ZipFile(path) as archive:
         archive_names = archive.namelist()
@@ -242,6 +480,7 @@ def pptx_metadata(path_value: str | os.PathLike[str]) -> dict[str, object]:
         width_emu = int(size.attrib["cx"])
         height_emu = int(size.attrib["cy"])
         ratio = width_emu / height_emu
+        vf_sanctuary_like = abs(ratio - (2560 / 704)) < 0.01
         notes_names = sorted(
             name
             for name in archive_names
@@ -261,7 +500,9 @@ def pptx_metadata(path_value: str | os.PathLike[str]) -> dict[str, object]:
             "width_inches": round(width_emu / 914400, 4),
             "height_inches": round(height_emu / 914400, 4),
             "aspect_ratio": round(ratio, 5),
-            "faithway_2560x704_like": abs(ratio - (2560 / 704)) < 0.01,
+            "faithway_2560x704_like": vf_sanctuary_like,
+            "vf_sanctuary_2560x704_like": vf_sanctuary_like,
+            "ultrawide_32x9_like": abs(ratio - (32 / 9)) < 0.01,
             "widescreen_16x9_like": abs(ratio - (16 / 9)) < 0.01,
             "media_file_count": sum(
                 1
@@ -290,7 +531,10 @@ def normalize_for_match(value: str) -> str:
     return " ".join(value.split())
 
 
-def write_json(data: object, output: str | os.PathLike[str] | None) -> None:
+def write_json(
+    data: object,
+    output: Optional[Union[str, os.PathLike[str]]],
+) -> None:
     rendered = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
     if output:
         output_path = Path(output).expanduser().resolve()

@@ -8,7 +8,8 @@ locations apply to another church. Use supplied pastor-approved files first.
 Ask for only what the current task needs:
 
 - a recent approved PowerPoint or blank church template;
-- ordinary 16:9 or the exact dimensions of a special sanctuary screen;
+- ordinary 16:9, exact 32:9, or the exact dimensions of another special
+  sanctuary screen;
 - the usual content layout and text-safe area;
 - the church's licensed fonts and whether they are installed;
 - the current sermon-series colors or art;
@@ -23,9 +24,14 @@ in.
 ## Canvas
 
 - Preserve a supplied deck's exact dimensions and master.
-- If the church has a special screen, use its exact ratio and safe zones.
+- If the church has a special screen, use its exact ratio and safe zones. Do not
+  round an existing ultrawide template to 32:9 merely because it looks similar.
+- With no template, create 16:9 for ordinary widescreen or a true 32:9 canvas
+  such as 16 by 4.5 inches when the pastor explicitly chooses 32:9.
 - If there is no template and no special screen, use 16:9.
 - Do not crop a 16:9 image blindly into ultrawide. Recompose it for each ratio.
+- When both 16:9 and 32:9 are needed, create and validate separate decks. Keep
+  faces, words, logos, and focal objects clear of ultrawide screen seams.
 - Preview on the actual presentation computer before the first service.
 
 ## Layout
@@ -34,12 +40,17 @@ in.
 - Treat recent pastor-approved sermon decks as the layout authority. Reuse their
   geometry, margins, type scale, and text/image frame positions—not their old
   sermon wording.
+- For the VF service-slide family, also read `vf-service-deck-patterns.md`. Its
+  measured sanctuary ratio and split-layout ranges are fallback evidence only;
+  the exact current PPTX still wins.
 - When no layout precedent exists, use concise text on the left and one dominant
   image on the right for content slides.
 - Keep one side assignment throughout the deck unless the pastor requests a
   deliberate exception.
 - Keep text and images in separate regions. Never place sermon words over a
   photograph or generated image.
+- A supplied series texture may remain as the template's text-field background.
+  Do not use that exception to place words over a new topical photo or AI scene.
 - Full-width art must be image-only. Full-width wording must be text-only or use
   a separate solid-color panel with no image behind it.
 - Use large type, high contrast, generous margins, and crop-safe images.

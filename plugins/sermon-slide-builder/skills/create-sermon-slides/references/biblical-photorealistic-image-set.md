@@ -14,7 +14,8 @@ one carefully produced biblical film—not unrelated pieces of artwork.
 
 ## Image scope
 
-Generate exactly one new image for each:
+When a heading is safely routed to AI illustration, generate exactly one new
+image for each:
 
 - main sermon point;
 - first-level lettered subpoint such as `A`, `B`, or `C`.
@@ -29,12 +30,20 @@ Do not generate a new image for:
 This rule governs generated imagery, not slide count. Preserve every requested
 slide cue and the pastor's exact outline. A non-image slide may use the approved
 deck's text-only treatment. If the sermon note explicitly requests a visual
-outside this default scope, pause and ask before expanding the image set.
+outside this default scope, treat a clear production direction as a recorded
+pastor override. Ask only when the direction or desired visual route is
+ambiguous; do not silently ignore the requested media or broaden every lower
+outline level.
+
+An eligible heading explicitly routed to an authentic photograph, an attached
+pastor asset, or a tracked missing-media placeholder does not also receive an AI
+image. Record that route in the main slide build record and exclude it from the
+planned AI-generation count.
 
 ## Plan before generating
 
 Create a `biblical-image-plan.md` in the working folder. For every main point and
-first-level subpoint, record:
+first-level subpoint routed to AI generation, record:
 
 - exact sermon heading and outline level;
 - primary biblical event or theological truth;

@@ -1,22 +1,22 @@
 {
   "name": "sermon-slide-builder",
   "version": "0.1.0",
-  "description": "Build faithful, image-rich sermon PowerPoints from pastor-provided notes and templates.",
+  "description": "Build faithful 16:9, 32:9, or exact-template sermon PowerPoints from pasted notes, files, and existing decks.",
   "author": {
     "name": "Valley Forge Baptist"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "Sermon Slide Builder",
-    "shortDescription": "Turn sermon notes into faithful PowerPoint decks.",
-    "longDescription": "Sermon Slide Builder helps ChatGPT and Codex create editable sermon PowerPoints, source or generate appropriate visuals, preserve the pastor's wording and theology, and audit the finished deck against the notes.",
+    "shortDescription": "Turn pasted or attached sermons into PowerPoints.",
+    "longDescription": "Sermon Slide Builder helps ChatGPT and Codex create editable 16:9, 32:9, or exact-template sermon PowerPoints from pasted text, note files, or existing decks; source authentic historic visuals; generate consistent biblical imagery; preserve pastor wording and theology; and leave tracked placeholders for pastor-supplied media.",
     "developerName": "Valley Forge Baptist",
     "category": "Productivity",
     "capabilities": ["Interactive", "Write"],
     "defaultPrompt": [
-      "Build a sermon PowerPoint from my notes.",
+      "Build a 16:9 or 32:9 PowerPoint from my pasted sermon and its SL or Slide labels.",
       "Create consistent biblical images and build my sermon PowerPoint.",
-      "Audit this sermon deck against my notes."
+      "Use this existing PowerPoint as the layout and show me which images I still need to add."
     ],
     "brandColor": "#4a75ff"
   }
