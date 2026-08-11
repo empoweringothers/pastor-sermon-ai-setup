@@ -17,7 +17,7 @@ import shutil
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -26,7 +26,7 @@ SOURCE_PLUGIN = REPO_ROOT / "plugins" / PLUGIN_NAME
 EXPECTED_SOURCE_PATH = f"./.codex/plugins/{PLUGIN_NAME}"
 
 
-def _digest(root: Path) -> str | None:
+def _digest(root: Path) -> Optional[str]:
     if not root.is_dir():
         return None
     digest = hashlib.sha256()
@@ -38,7 +38,7 @@ def _digest(root: Path) -> str | None:
     return digest.hexdigest()
 
 
-def _read_manifest(root: Path) -> dict[str, Any] | None:
+def _read_manifest(root: Path) -> Optional[dict[str, Any]]:
     path = root / ".codex-plugin/plugin.json"
     if not path.is_file():
         return None
@@ -93,14 +93,14 @@ def _safe_display(path: Path, home: Path, show_paths: bool) -> str:
         return f"<repository>/{path.name}"
 
 
-def _marketplace_entry(marketplace: dict[str, Any]) -> dict[str, Any] | None:
+def _marketplace_entry(marketplace: dict[str, Any]) -> Optional[dict[str, Any]]:
     for item in marketplace.get("plugins", []):
         if isinstance(item, dict) and item.get("name") == PLUGIN_NAME:
             return item
     return None
 
 
-def _cache_manifests(home: Path, version: str | None) -> list[Path]:
+def _cache_manifests(home: Path, version: Optional[str]) -> list[Path]:
     if not version:
         return []
     root = home / ".codex/plugins/cache"
@@ -123,7 +123,7 @@ def check(home: Path, *, show_paths: bool = False) -> dict[str, Any]:
     target_manifest = _read_manifest(target)
     source_digest = _digest(SOURCE_PLUGIN)
     target_digest = _digest(target)
-    marketplace_entry: dict[str, Any] | None = None
+    marketplace_entry: Optional[dict[str, Any]] = None
     marketplace_error = None
     if marketplace_path.exists():
         try:
@@ -208,7 +208,9 @@ def _write_marketplace(path: Path, data: dict[str, Any]) -> None:
             temporary.unlink()
 
 
-def _validate_bundle(bundle: Path) -> tuple[dict[str, Any], dict[str, Any] | None]:
+def _validate_bundle(
+    bundle: Path,
+) -> tuple[dict[str, Any], Optional[dict[str, Any]]]:
     metadata_path = bundle / "metadata.json"
     if not metadata_path.is_file():
         raise ValueError(f"Backup metadata is missing: {metadata_path}")

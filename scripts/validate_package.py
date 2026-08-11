@@ -42,22 +42,61 @@ def validate() -> list[str]:
     elif not all(isinstance(item, str) and 0 < len(item) <= 128 for item in prompts):
         errors.append("Each default prompt must be a non-empty string of at most 128 characters.")
 
-    skill = PLUGIN_ROOT / "skills/create-sermon-slides/SKILL.md"
-    if not skill.is_file():
-        errors.append("Bundled create-sermon-slides SKILL.md is missing.")
-    else:
+    skill_requirements = {
+        "create-sermon-slides": "Never place sermon words on top of",
+        "pastor-assistant-os": "YES, SAVE THIS RULE",
+        "review-pastor-work": "fresh reviewer subagent",
+        "learn-pastor-corrections": "Fix the current deliverable first",
+    }
+    for skill_name, required_text in skill_requirements.items():
+        skill_root = PLUGIN_ROOT / "skills" / skill_name
+        skill = skill_root / "SKILL.md"
+        if not skill.is_file():
+            errors.append(f"Bundled {skill_name} SKILL.md is missing.")
+            continue
         content = skill.read_text(encoding="utf-8")
         frontmatter = re.match(r"^---\n(.*?)\n---", content, re.DOTALL)
         if not frontmatter:
-            errors.append("Skill YAML frontmatter is missing.")
+            errors.append(f"{skill_name} YAML frontmatter is missing.")
         else:
             header = frontmatter.group(1)
-            if not re.search(r"^name:\s*create-sermon-slides\s*$", header, re.MULTILINE):
-                errors.append("Skill name is invalid.")
+            if not re.search(
+                rf"^name:\s*{re.escape(skill_name)}\s*$", header, re.MULTILINE
+            ):
+                errors.append(f"{skill_name} skill name is invalid.")
             if not re.search(r"^description:\s*\S", header, re.MULTILINE):
-                errors.append("Skill description is missing.")
-        if "Never place sermon words on top of" not in content:
-            errors.append("The no-text-over-images layout rule is missing.")
+                errors.append(f"{skill_name} description is missing.")
+        if required_text not in content:
+            errors.append(f"{skill_name} is missing its required operating rule.")
+        if "[TODO:" in content:
+            errors.append(f"{skill_name} contains an unfinished TODO placeholder.")
+        agent_metadata = skill_root / "agents/openai.yaml"
+        if not agent_metadata.is_file():
+            errors.append(f"{skill_name} agents/openai.yaml is missing.")
+        else:
+            metadata = agent_metadata.read_text(encoding="utf-8")
+            if f"${skill_name}" not in metadata:
+                errors.append(
+                    f"{skill_name} default prompt must explicitly name ${skill_name}."
+                )
+
+    os_root = PLUGIN_ROOT / "skills/pastor-assistant-os"
+    for relative in (
+        "scripts/pastor_os.py",
+        "references/os-contract.md",
+        "references/privacy-policy.md",
+        "references/python-free-fallback.md",
+        "assets/workspace-template/AGENTS.md",
+        "assets/workspace-template/learning/rules.json",
+    ):
+        if not (os_root / relative).is_file():
+            errors.append(f"Pastor Assistant OS resource is missing: {relative}.")
+    if (os_root / "SKILL.md").is_file():
+        os_content = (os_root / "SKILL.md").read_text(encoding="utf-8")
+        if "Do not install Python merely to use this OS" not in os_content:
+            errors.append("Pastor Assistant OS is missing the Python-free rule.")
+        if "Never send its memory files" not in os_content:
+            errors.append("Pastor Assistant OS is missing the private-memory rule.")
 
     marketplace_path = REPO_ROOT / ".agents/plugins/marketplace.json"
     try:
@@ -83,6 +122,19 @@ def validate() -> list[str]:
     ]
     if unwanted:
         errors.append("Generated cache or desktop metadata files are present.")
+
+    runtime_names = {
+        "setup-state.local.json",
+        "os-state.local.json",
+        "pastor-rules.local.json",
+    }
+    runtime_files = [
+        path
+        for path in REPO_ROOT.rglob("*")
+        if path.is_file() and path.name in runtime_names
+    ]
+    if runtime_files:
+        errors.append("Private runtime state files are present in the source tree.")
     return errors
 
 

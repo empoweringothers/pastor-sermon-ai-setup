@@ -6,7 +6,7 @@ window.PASTOR_SERMON_RELEASE = Object.freeze({
   publisher: "Valley Forge Baptist",
   releaseUrl: "{{GITHUB_RELEASE_URL}}",
   gitCommit: "{{GIT_COMMIT_SHA}}",
-  packageVersion: "0.1.0",
-  releaseTag: "v0.1.0",
+  packageVersion: "0.2.0",
+  releaseTag: "v0.2.0",
   messageTemplate: ""
 });

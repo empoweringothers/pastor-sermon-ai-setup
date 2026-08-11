@@ -1,7 +1,7 @@
 {
   "name": "pastor-sermon-ai",
   "interface": {
-    "displayName": "Pastor Sermon AI"
+    "displayName": "Pastor Assistant Agent OS"
   },
   "plugins": [
     {

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pastor Assistant OS"
+  short_description: "Run the pastor’s private learning workspace"
+  default_prompt: "Use $pastor-assistant-os to start my private pastor workspace and help with today’s task."

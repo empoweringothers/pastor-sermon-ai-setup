@@ -17,7 +17,7 @@ This page is for the person who publishes the GitHub repository.
 
   ```bash
   python3 scripts/build_release.py \
-    --release-url "https://github.com/OWNER/REPO/releases/tag/v0.1.0" \
+    --release-url "https://github.com/OWNER/REPO/releases/tag/v0.2.0" \
     --commit "FULL_40_CHARACTER_COMMIT_SHA" \
     --out "release"
 ```
@@ -30,5 +30,14 @@ repository, so rebuilding cannot place an earlier ZIP inside the new ZIP.
 - Run the plugin and skill validators listed in `TESTING.md`.
 - Test the pastor paste message from a fresh ChatGPT conversation.
 - Test the complete setup on one Mac and one Windows computer before broad use.
+- Test OS initialization with an already available Python runtime and with the
+  Python-free local-file fallback. The pastor must not be told to install
+  Python merely for the Markdown brain.
+- Save one synthetic approved rule, open a fresh chat, confirm it loads, retire
+  it, and confirm it no longer loads.
+- Replace/update the plugin and confirm the private local profile and approved
+  rules remain unchanged.
+- Confirm the ZIP contains the blank workspace template but no local state,
+  pastor rule, backup, proposal, sermon, or private path.
 - Confirm that the assistant gives only one action and waits for `DONE` every
   time.

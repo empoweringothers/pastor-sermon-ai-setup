@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "trusted_release_verified": "unknown",
   "operating_system": "unknown",
   "chatgpt_desktop_installed": "unknown",
@@ -19,6 +19,10 @@
   "bundled_skill_invoked": "unknown",
   "fresh_chat_verification_passed": "unknown",
   "church_private_data_approved": "unknown",
+  "pastor_assistant_os_initialized": "unknown",
+  "pastor_assistant_os_doctor_passed": "unknown",
+  "approved_local_rules_readable": "unknown",
+  "learning_skill_invoked": "unknown",
   "current_step": 0,
   "last_error": null
 }

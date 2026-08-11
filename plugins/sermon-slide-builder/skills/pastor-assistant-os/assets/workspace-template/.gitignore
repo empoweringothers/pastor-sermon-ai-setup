@@ -1,0 +1,14 @@
+# Pastor Assistant OS is local and private.
+projects/
+reviews/
+backups/
+proposals/
+*.pptx
+*.docx
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.heic
+*.mp3
+*.mp4

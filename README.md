@@ -1,7 +1,7 @@
-# Pastor Sermon AI — Computer Setup
+# Pastor Assistant Agent OS — Computer Setup
 
-This repository does one job: it prepares a pastor's computer to use the
-Sermon Slide Builder plugin in ChatGPT and Codex.
+This repository prepares a pastor's computer to use the Pastor Assistant Agent
+OS plugin in ChatGPT and Codex.
 
 It is **not** the prompting lesson, image lesson, or sermon-writing course.
 Those can begin only after this setup is verified.
@@ -16,7 +16,8 @@ The pastor pastes one short message into ChatGPT. The setup assistant then:
 - confirms the account can create images and editable presentation files;
 - checks the included helper tools;
 - asks explicit permission, then installs only what is missing and truly required;
-- installs the Sermon Slide Builder plugin;
+- installs the Pastor Assistant Agent OS plugin;
+- creates a private local learning workspace only after permission;
 - verifies the plugin in a new chat.
 
 The assistant gives **one question, permission request, or action at a time**.
@@ -30,7 +31,8 @@ resolved.
 |---|---:|---|
 | ChatGPT desktop app | Yes | Runs Chat, Work, Codex, and plugins |
 | Church-approved ChatGPT account | Yes | Each pastor signs in to their own approved account; no shared password |
-| Sermon Slide Builder plugin | Yes | Adds the repeatable sermon-deck workflow |
+| Pastor Assistant Agent OS plugin | Yes | Adds the sermon builder, reviewer, and approved-correction workflow |
+| Private local OS folder | Yes | Keeps approved pastor preferences outside GitHub and outside the replaceable plugin |
 | Image generation in ChatGPT | Yes | Creates sermon illustrations inside the guided workflow |
 | Presentation creation in Work/Codex | Yes | Produces the editable `.pptx` file |
 | Microsoft PowerPoint | Yes for PowerPoint delivery | Opens, edits, presents, and performs final visual review |
@@ -40,10 +42,30 @@ resolved.
 | Git | No for the download route | Helpful for updates, but not required for a pastor |
 | Python packages | No | The included helper scripts use Python's standard library only |
 
-Python itself is needed only when the helper scripts are run outside a host
-that already supplies it. The setup assistant checks before asking the pastor
-to install anything. LibreOffice and `pdftotext` are conditional fallbacks for
-old `.doc` files or PDF sermon notes; they are not installed by default.
+Pastors do not need to install Python for the brain. When ChatGPT/Codex already
+provides Python, the private learning tool uses its standard library. When it
+does not, the agent uses the bundled Markdown templates and local file tools.
+Python may still be requested for an optional helper or unusual file conversion
+only after that separate need is proven. LibreOffice and `pdftotext` remain
+conditional fallbacks for old `.doc` files or PDF sermon notes.
+
+## How the assistant improves
+
+The plugin does not retrain ChatGPT and it never rewrites itself. It uses a safe
+local loop:
+
+1. Build the current work.
+2. Review it independently.
+3. Fix a confirmed mistake.
+4. Ask whether one generalized correction should be saved.
+5. Save it locally only after `YES, SAVE THIS RULE`.
+6. Load approved rules before the next pastor task.
+
+The local folder uses the Mac Application Support or Windows Local AppData
+location. It stores generalized rules—not sermons, images, names, counseling
+details, prayer requests, credentials, URLs, or private file paths. Repeated
+lessons may become a local church-rule proposal, but only an administrator can
+review and publish a shared plugin update.
 
 ## Give this to a pastor
 
@@ -81,7 +103,8 @@ README with `RELEASE-README.md` in the distributed folder.
 - `scripts/verify_release.py` — verifies every distributed file before setup
 - `scripts/build_release.py` — builds the pastor ZIP, checksum, and paste message
 - `.agents/plugins/marketplace.json` — repository plugin marketplace
-- `plugins/sermon-slide-builder/` — the installable plugin
+- `plugins/sermon-slide-builder/` — the installable Pastor Assistant Agent OS
+  plugin, including build, review, and approved-correction skills
 - `SOFTWARE.md` — exact required and conditional software
 - `SOURCES.md` — current official ChatGPT and plugin documentation
 - `PUBLISHING-CHECKLIST.md` — owner-only steps before sharing the link
@@ -94,9 +117,9 @@ can coach the setup from any supported chat, but it needs the desktop app's Work
 or Codex access to inspect files or perform local setup actions. The protocol
 handles that handoff without showing the pastor a long checklist.
 
-This is a ChatGPT/Codex workflow plugin, not a PowerPoint add-in. It creates and
-checks editable `.pptx` files; PowerPoint remains the program used to open and
-present them.
+This is a ChatGPT/Codex workflow plugin, not a PowerPoint add-in or a background
+self-training model. It creates and checks editable `.pptx` files; PowerPoint
+remains the program used to open and present them.
 
 When the plugin later builds a deck, a recent pastor-approved sermon PowerPoint
 is the layout authority. Sermon words stay in a separate text region and images

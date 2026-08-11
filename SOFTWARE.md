@@ -14,10 +14,18 @@ shared passwords or ask the pastor to reveal credentials.
 Approved source: `learn.chatgpt.com/docs/app` or a download link reached from
 that official OpenAI page. Show the domain before asking permission.
 
-### Sermon Slide Builder plugin
+### Pastor Assistant Agent OS plugin
 
 Required. It is included under `plugins/sermon-slide-builder/` and listed in
-`.agents/plugins/marketplace.json`.
+`.agents/plugins/marketplace.json`. The technical folder name stays stable so
+existing installations can update safely.
+
+### Private local Pastor Assistant OS folder
+
+Required for approved corrections to carry into future chats. It is created
+only after explicit permission under the Mac Application Support folder or the
+Windows Local AppData folder. It is outside the plugin, outside the release,
+and outside GitHub so an update cannot overwrite it.
 
 ### Image generation
 
@@ -49,9 +57,11 @@ generation.
 
 ### Python 3
 
-The three sermon helper scripts use only Python's standard library. No `pip`
-install is needed. A system Python is needed only when those scripts are run
-outside a ChatGPT/Codex environment that already supplies Python.
+The sermon helpers and deterministic Pastor Assistant OS manager use only
+Python's standard library. No `pip` install is needed. Python is not required
+for the Markdown brain itself: when the host has no Python launcher, the agent
+uses the bundled workspace template and local file tools. Request a system
+Python only when a separate helper or file conversion truly requires it.
 
 Approved source when it is truly required: `python.org/downloads` or the
 computer's church-managed software catalog.
@@ -99,6 +109,7 @@ clean commit, release tag, and GitHub origin before packaging.
 - an OpenAI API key
 - a database
 - a local web server
+- a third-party memory server
 
 Do not install any of these for this workflow unless the repository changes and
 a new, verified dependency is documented here.

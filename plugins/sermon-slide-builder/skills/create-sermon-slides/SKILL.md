@@ -13,6 +13,12 @@ Set `SKILL_DIR` to the absolute path of this skill before running its scripts.
 The helper scripts require Python 3.9 or newer and use only the standard
 library. They do not require Java, Node.js, `python-pptx`, or `python-docx`.
 
+Before resolving sermon inputs, invoke `$pastor-assistant-os` and load the
+applicable approved church and pastor rules from the private local OS. If the OS
+is unavailable, continue with this skill's built-in rules and disclose that
+personal learning was not loaded. Never copy local memory into the sermon deck,
+speaker notes, source log, public repository, or delivery folder.
+
 ## Read the Relevant References
 
 - Read `references/wording-fidelity.md` for every create, edit, or audit task.
@@ -98,8 +104,9 @@ library. They do not require Java, Node.js, `python-pptx`, or `python-docx`.
 20. Apply this precedence: safety, privacy, rights, uncertainty disclosure, and
     non-overwrite rules; then the pastor's current explicit instruction; then
     the designated sermon source for wording; then a content-bearing PPTX; then
-    the reference/template PPTX for layout; then the church profile and
-    defaults.
+    the reference/template PPTX for layout; then the church profile; then
+    applicable approved personal rules; then plugin defaults. A personal rule
+    may refine a preference but never weaken a higher rule.
 
 ## Workflow
 
@@ -383,6 +390,11 @@ Review AI-authored captions, research summaries, and handoff text for accuracy.
 Do not run a prose-rewriting pass over the pastor's verbatim slide copy or
 Scripture.
 
+Invoke `$review-pastor-work` for an independent final pass using the sermon
+source, finished artifacts, this skill's rules, and only the approved personal
+rules that apply. Fix every confirmed blocker or required defect, then re-run
+the affected checks. A builder's completion claim is not its own review.
+
 ## Delivery Contract
 
 Deliver:
@@ -400,3 +412,9 @@ Deliver:
 
 Do not claim the deck is complete when a cue, image, citation, or review flag is
 still unresolved.
+
+If the pastor reports a miss, fix and verify the current deck first. Then invoke
+`$learn-pastor-corrections` to decide whether the correction is one-time or a
+reusable personal rule. Never save a rule without the exact approval required
+by that skill, and never carry a sermon-specific character bible into another
+sermon merely because it existed in the last project.

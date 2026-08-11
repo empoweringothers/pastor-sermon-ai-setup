@@ -31,10 +31,22 @@ python3 -m unittest discover \
   plugins/sermon-slide-builder/skills/create-sermon-slides/tests
 ```
 
+## Pastor Assistant OS tests
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover \
+  plugins/sermon-slide-builder/skills/pastor-assistant-os/tests
+```
+
+These tests cover Mac/Windows path selection, exact consent, non-overwrite
+initialization, private-data rejection, cross-chat reload, repeated-correction
+promotion, forgetting, local-only church proposals, and concurrent-write
+protection.
+
 ## Setup repository tests
 
 ```bash
-python3 -m unittest discover tests
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover tests
 ```
 
 The included GitHub Actions workflow runs both test suites on macOS and Windows.
@@ -60,5 +72,5 @@ The source gate intentionally fails until the repository owner chooses and adds
 a public-distribution license.
 
 Finally, test installation from the Plugins Directory, restart ChatGPT desktop,
-and verify the plugin in a new chat using the exact request in Phase 7 of
-`SETUP-ASSISTANT.md`.
+and verify the plugin in new chats using the exact requests in Phases 7 and 10
+of `SETUP-ASSISTANT.md`.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Learn Pastor Corrections"
+  short_description: "Save approved lessons for future sermons"
+  default_prompt: "Use $learn-pastor-corrections to fix this mistake and remember my approved correction."

@@ -1,4 +1,4 @@
-# Pastor Sermon AI — Verified Setup Folder
+# Pastor Assistant Agent OS — Verified Setup Folder
 
 This folder contains the computer and plugin setup package. It is not the
 prompting or sermon-image lesson.
@@ -32,8 +32,14 @@ ChatGPT account without an API key. The setup chat remains the authority.
 - `scripts/prepare_plugin.py` — permissioned plugin-source preparation and
   recovery
 - `.agents/plugins/marketplace.json` and `plugins/sermon-slide-builder/` — the
-  installable Sermon Slide Builder plugin
+  installable Pastor Assistant Agent OS plugin with sermon build, review, and
+  approved-correction skills
 - `SOFTWARE.md` and `SOURCES.md` — software boundaries and official sources
 
-Java and Node.js are not required. Python uses only its standard library and is
-needed only for the local helper-script route.
+Java and Node.js are not required. Pastors do not need to install Python for the
+Markdown brain; the agent can use local file tools when no bundled Python
+runtime is available.
+
+After the plugin is verified, setup asks permission to create a private Pastor
+Assistant OS folder in the computer's local application-data location. Approved
+rules live there, outside this replaceable release folder and outside GitHub.

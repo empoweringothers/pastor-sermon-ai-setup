@@ -1,22 +1,22 @@
 {
   "name": "sermon-slide-builder",
-  "version": "0.1.0",
-  "description": "Build faithful 16:9, 32:9, or exact-template sermon PowerPoints from pasted notes, files, and existing decks.",
+  "version": "0.2.0",
+  "description": "Run a private Pastor Assistant OS that builds, reviews, fixes, and improves faithful sermon PowerPoints through approved local rules.",
   "author": {
     "name": "Valley Forge Baptist"
   },
   "skills": "./skills/",
   "interface": {
-    "displayName": "Sermon Slide Builder",
-    "shortDescription": "Turn pasted or attached sermons into PowerPoints.",
-    "longDescription": "Sermon Slide Builder helps ChatGPT and Codex create editable 16:9, 32:9, or exact-template sermon PowerPoints from pasted text, note files, or existing decks; source authentic historic visuals; generate consistent biblical imagery; preserve pastor wording and theology; and leave tracked placeholders for pastor-supplied media.",
+    "displayName": "Pastor Assistant Agent OS",
+    "shortDescription": "Build sermon decks and learn approved corrections.",
+    "longDescription": "Pastor Assistant Agent OS gives ChatGPT and Codex a private local operating loop for pastor work: load approved preferences, create editable 16:9, 32:9, or exact-template sermon PowerPoints, review the result independently, fix mistakes, and remember only generalized corrections the pastor explicitly approves.",
     "developerName": "Valley Forge Baptist",
     "category": "Productivity",
     "capabilities": ["Interactive", "Write"],
     "defaultPrompt": [
-      "Build a 16:9 or 32:9 PowerPoint from my pasted sermon and its SL or Slide labels.",
-      "Create consistent biblical images and build my sermon PowerPoint.",
-      "Use this existing PowerPoint as the layout and show me which images I still need to add."
+      "Start my Pastor Assistant OS and build this week's sermon PowerPoint.",
+      "Review this sermon deck, fix what is wrong, and ask before remembering a new rule.",
+      "Remember this approved correction for my future sermon work."
     ],
     "brandColor": "#4a75ff"
   }

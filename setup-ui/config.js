@@ -8,6 +8,6 @@
 window.PASTOR_SETUP_CONFIG = Object.freeze({
   releaseMetadataUrl: "../RELEASE.json",
   chatgptUrl: "https://chatgpt.com/",
-  pluginName: "Sermon Slide Builder",
-  pluginVersion: "0.1.0"
+  pluginName: "Pastor Assistant Agent OS",
+  pluginVersion: "0.2.0"
 });

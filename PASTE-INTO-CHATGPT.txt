@@ -1,4 +1,4 @@
-Set up my computer for sermon PowerPoint work using this trusted release.
+Set up my computer for the Pastor Assistant Agent OS using this trusted release.
 
 Publisher: Valley Forge Baptist
 Tagged release: {{GITHUB_RELEASE_URL}}
@@ -20,8 +20,9 @@ error, stay on the current step until it is solved.
 
 Never ask me to send a password, verification code, API key, private sermon,
 church-member photo, or private church file during setup. Do not disable my
-security settings. This is computer, ChatGPT, software, and plugin setup only.
-Do not teach me prompting yet.
+security settings. This is computer, ChatGPT, software, plugin, and private
+local Pastor Assistant OS setup only. Create the local OS only after the exact
+permission required by SETUP-ASSISTANT.md. Do not teach me prompting yet.
 
 If you cannot open the trusted release, give me only one action: ask me to attach
 the verified release ZIP. Then wait for DONE.

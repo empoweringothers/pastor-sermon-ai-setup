@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only readiness check for the Pastor Sermon AI setup repository."""
+"""Read-only readiness check for the Pastor Assistant Agent OS setup."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -22,17 +22,21 @@ REQUIRED_REPO_FILES = (
     ".agents/plugins/marketplace.json",
     "plugins/sermon-slide-builder/.codex-plugin/plugin.json",
     "plugins/sermon-slide-builder/skills/create-sermon-slides/SKILL.md",
+    "plugins/sermon-slide-builder/skills/pastor-assistant-os/SKILL.md",
+    "plugins/sermon-slide-builder/skills/pastor-assistant-os/scripts/pastor_os.py",
+    "plugins/sermon-slide-builder/skills/review-pastor-work/SKILL.md",
+    "plugins/sermon-slide-builder/skills/learn-pastor-corrections/SKILL.md",
 )
 
 
-def _first_existing(paths: list[Path]) -> Path | None:
+def _first_existing(paths: list[Path]) -> Optional[Path]:
     for path in paths:
         if path.exists():
             return path
     return None
 
 
-def _safe_path(path: Path | None, *, show_paths: bool) -> str | None:
+def _safe_path(path: Optional[Path], *, show_paths: bool) -> Optional[str]:
     if path is None:
         return None
     if show_paths:
@@ -49,7 +53,7 @@ def _safe_path(path: Path | None, *, show_paths: bool) -> str | None:
 
 def _command(
     name: str,
-    version_args: list[str] | None = None,
+    version_args: Optional[list[str]] = None,
     *,
     include_versions: bool = False,
     show_paths: bool = False,
@@ -199,7 +203,7 @@ def _repo_check(*, show_paths: bool) -> dict[str, Any]:
     }
 
 
-def _digest(root: Path) -> str | None:
+def _digest(root: Path) -> Optional[str]:
     if not root.is_dir():
         return None
     digest = hashlib.sha256()
@@ -214,7 +218,7 @@ def _digest(root: Path) -> str | None:
 def _plugin_check(*, show_paths: bool) -> dict[str, Any]:
     source = REPO_ROOT / "plugins" / PLUGIN_NAME
     source_manifest_path = source / ".codex-plugin/plugin.json"
-    source_manifest: dict[str, Any] | None = None
+    source_manifest: Optional[dict[str, Any]] = None
     if source_manifest_path.is_file():
         try:
             value = json.loads(source_manifest_path.read_text(encoding="utf-8"))
@@ -296,6 +300,89 @@ def _plugin_check(*, show_paths: bool) -> dict[str, Any]:
     }
 
 
+def _pastor_os_check(*, show_paths: bool) -> dict[str, Any]:
+    system = platform.system()
+    if system == "Darwin":
+        root = (
+            Path.home()
+            / "Library/Application Support"
+            / "Valley Forge Baptist"
+            / "Pastor Assistant OS"
+        )
+    elif system == "Windows":
+        local_value = (os.environ.get("LOCALAPPDATA") or "").strip()
+        if not local_value:
+            return {
+                "status": "needs-setup",
+                "initialized": False,
+                "root": None,
+                "approved_rules": 0,
+                "rule_contents_in_report": False,
+                "note": "Windows LOCALAPPDATA must be available before OS creation.",
+            }
+        root = (
+            Path(local_value)
+            / "Valley Forge Baptist"
+            / "Pastor Assistant OS"
+        )
+    else:
+        return {
+            "status": "unsupported",
+            "initialized": False,
+            "root": None,
+            "approved_rules": 0,
+            "rule_contents_in_report": False,
+            "note": "Pastor Assistant OS setup supports macOS and Windows only.",
+        }
+
+    state_path = root / "state/os-state.json"
+    rules_path = root / "learning/rules.json"
+    initialized = False
+    approved_count = 0
+    rules_readable = False
+    if state_path.is_file():
+        try:
+            state = json.loads(state_path.read_text(encoding="utf-8"))
+            initialized = bool(
+                state.get("product") == "pastor-assistant-os"
+                and state.get("schema_version") == 1
+            )
+        except (OSError, json.JSONDecodeError):
+            initialized = False
+    if initialized and rules_path.is_file():
+        try:
+            rules = json.loads(rules_path.read_text(encoding="utf-8"))
+            values = rules.get("rules", [])
+            if isinstance(values, list):
+                rules_readable = True
+                approved_count = sum(
+                    1
+                    for item in values
+                    if isinstance(item, dict) and item.get("status") == "approved"
+                )
+        except (OSError, json.JSONDecodeError):
+            rules_readable = False
+    status = (
+        "healthy"
+        if initialized and rules_readable
+        else "needs-repair"
+        if state_path.exists()
+        else "needs-setup"
+    )
+    return {
+        "status": status,
+        "initialized": initialized,
+        "root": _safe_path(root, show_paths=show_paths),
+        "approved_rules": approved_count,
+        "rules_readable": rules_readable,
+        "rule_contents_in_report": False,
+        "note": (
+            "This is a privacy-safe presence/count check. Run the bundled doctor "
+            "before setup completion."
+        ),
+    }
+
+
 def build_report(
     *, show_paths: bool = False, include_versions: bool = False
 ) -> dict[str, Any]:
@@ -311,7 +398,11 @@ def build_report(
             "status": "available" if python_supported else "unsupported",
             "version": platform.python_version(),
             "executable": _safe_path(Path(sys.executable), show_paths=show_paths),
-            "note": "Python 3.9 or newer; no pip packages are needed.",
+            "required": False,
+            "note": (
+                "Python 3.9 or newer can run deterministic helpers; no pip packages "
+                "are needed. The Markdown brain has a local-file fallback."
+            ),
         },
         "word": app_checks["word"],
         "libreoffice": {
@@ -379,6 +470,7 @@ def build_report(
         },
         "required": required,
         "plugin": _plugin_check(show_paths=show_paths),
+        "pastor_assistant_os": _pastor_os_check(show_paths=show_paths),
         "conditional": conditional,
         "summary": {
             "required_failures": statuses.count("fail")
@@ -397,6 +489,7 @@ def print_text(report: dict[str, Any]) -> None:
     for name, item in report["required"].items():
         print(f"Required - {name}: {item['status']}")
     print(f"Plugin source: {report['plugin']['status']}")
+    print(f"Pastor Assistant OS: {report['pastor_assistant_os']['status']}")
     for name, item in report["conditional"].items():
         if name == "python":
             value = item["version"]

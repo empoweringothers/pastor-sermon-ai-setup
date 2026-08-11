@@ -29,11 +29,10 @@ EXCLUDED_NAMES = {
     "TESTING.md",
     "setup-state.local.json",
 }
-EXCLUDED_PARTS = {".git", "__pycache__"}
+EXCLUDED_PARTS = {".git", "__pycache__", "tests"}
 EXCLUDED_SOURCE_PATHS = {
     "scripts/build_release.py",
     "scripts/check_publish_ready.py",
-    "tests/test_setup_repository.py",
 }
 
 

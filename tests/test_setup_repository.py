@@ -36,7 +36,12 @@ class SetupRepositoryTests(unittest.TestCase):
             )
         )
         self.assertEqual(plugin_manifest["name"], "sermon-slide-builder")
+        self.assertEqual(plugin_manifest["version"], "0.2.0")
         self.assertEqual(plugin_manifest["skills"], "./skills/")
+        self.assertEqual(
+            plugin_manifest["interface"]["displayName"],
+            "Pastor Assistant Agent OS",
+        )
         self.assertEqual(plugin_manifest["interface"]["capabilities"], ["Interactive", "Write"])
         prompts = plugin_manifest["interface"]["defaultPrompt"]
         self.assertIsInstance(prompts, list)
@@ -88,8 +93,42 @@ class SetupRepositoryTests(unittest.TestCase):
         self.assertFalse(report["conditional"]["java"]["required"])
         self.assertFalse(report["conditional"]["node"]["required"])
         self.assertFalse(report["conditional"]["git"]["required"])
+        self.assertFalse(report["conditional"]["python"]["required"])
+        self.assertFalse(report["pastor_assistant_os"]["rule_contents_in_report"])
         self.assertNotIn(str(Path.home()), json.dumps(report))
         self.assertEqual(report["required"]["repository"]["status"], "pass")
+
+    def test_pastor_assistant_os_has_private_approved_learning_loop(self) -> None:
+        plugin_root = REPO_ROOT / "plugins/sermon-slide-builder"
+        os_root = plugin_root / "skills/pastor-assistant-os"
+        os_skill = (os_root / "SKILL.md").read_text(encoding="utf-8")
+        learn_skill = (
+            plugin_root / "skills/learn-pastor-corrections/SKILL.md"
+        ).read_text(encoding="utf-8")
+        review_skill = (
+            plugin_root / "skills/review-pastor-work/SKILL.md"
+        ).read_text(encoding="utf-8")
+        setup = (REPO_ROOT / "SETUP-ASSISTANT.md").read_text(encoding="utf-8")
+        state = json.loads(
+            (REPO_ROOT / "setup-state.example.json").read_text(encoding="utf-8")
+        )
+
+        self.assertIn("YES, CREATE PASTOR ASSISTANT OS", os_skill)
+        self.assertIn("YES, SAVE THIS RULE", os_skill)
+        self.assertIn("Do not install Python merely to use this OS", os_skill)
+        self.assertIn("do not interrupt the fix for OS setup", os_skill)
+        self.assertIn("Fix the current deliverable first", learn_skill)
+        self.assertIn("never a reason to delay the current fix", learn_skill)
+        self.assertIn("Never edit the installed skill", learn_skill)
+        self.assertIn("fresh reviewer subagent", review_skill)
+        self.assertIn("local application-data", setup)
+        self.assertIn("python-free-fallback.md", setup)
+        self.assertEqual(state["schema_version"], 2)
+        self.assertIn("pastor_assistant_os_initialized", state)
+        self.assertTrue(
+            (os_root / "assets/workspace-template/AGENTS.md").is_file()
+        )
+        self.assertTrue((os_root / "scripts/pastor_os.py").is_file())
 
     def test_preparer_backup_remove_and_restore(self) -> None:
         preparer = load_script("prepare_plugin")
@@ -100,9 +139,21 @@ class SetupRepositoryTests(unittest.TestCase):
             self.assertTrue(first["target_matches_source"])
             self.assertTrue(first["plugins_directory_action_required"])
 
+            local_os = (
+                home
+                / "Library/Application Support/Valley Forge Baptist/Pastor Assistant OS"
+            )
+            local_os.mkdir(parents=True)
+            local_rule = local_os / "approved-rule-test.txt"
+            local_rule.write_text("preserve local pastor rule", encoding="utf-8")
+
             second = preparer.prepare(home, show_paths=True)
             backup = Path(second["backup_bundle"])
             self.assertTrue(backup.is_dir())
+            self.assertEqual(
+                local_rule.read_text(encoding="utf-8"),
+                "preserve local pastor rule",
+            )
 
             removed = preparer.remove_source(home, show_paths=True)
             self.assertFalse(removed["source_registered"])
@@ -139,6 +190,10 @@ class SetupRepositoryTests(unittest.TestCase):
             after = preparer.check(home, show_paths=True)
             self.assertEqual(before["target_matches_source"], after["target_matches_source"])
             self.assertEqual(before["source_registered"], after["source_registered"])
+            self.assertEqual(
+                local_rule.read_text(encoding="utf-8"),
+                "preserve local pastor rule",
+            )
 
     def test_slide_layout_rule_separates_text_and_images(self) -> None:
         skill_root = REPO_ROOT / "plugins/sermon-slide-builder/skills/create-sermon-slides"
@@ -221,7 +276,7 @@ class SetupRepositoryTests(unittest.TestCase):
             builder.PLUGIN_MANIFEST = (
                 source / "plugins/sermon-slide-builder/.codex-plugin/plugin.json"
             )
-            release_url = "https://github.com/example/example/releases/tag/v0.1.0"
+            release_url = "https://github.com/example/example/releases/tag/v0.2.0"
             commit = "a" * 40
             builder.validate_inputs(release_url, commit)
             with self.assertRaises(ValueError):
@@ -242,7 +297,7 @@ class SetupRepositoryTests(unittest.TestCase):
                 commit,
                 excluded_roots=(prior_output,),
             )
-            builder.write_file_manifest(stage, "0.1.0", commit)
+            builder.write_file_manifest(stage, "0.2.0", commit)
             builder.verify_staged_tree(stage)
             archive = root / "release.zip"
             builder.write_zip(stage, archive)
@@ -254,6 +309,18 @@ class SetupRepositoryTests(unittest.TestCase):
             staged_readme = (stage / "README.md").read_text(encoding="utf-8")
             self.assertIn("Start with the separate setup message", staged_readme)
             self.assertNotIn("scripts/build_release.py", staged_readme)
+            self.assertTrue(
+                (
+                    stage
+                    / "plugins/sermon-slide-builder/skills/pastor-assistant-os/SKILL.md"
+                ).is_file()
+            )
+            self.assertFalse(
+                (
+                    stage
+                    / "plugins/sermon-slide-builder/skills/pastor-assistant-os/tests"
+                ).exists()
+            )
             release = json.loads((stage / "RELEASE.json").read_text(encoding="utf-8"))
             self.assertEqual(release["release_url"], release_url)
             self.assertEqual(release["git_commit"], commit)
@@ -263,8 +330,8 @@ class SetupRepositoryTests(unittest.TestCase):
             self.assertIn("window.PASTOR_SERMON_RELEASE", release_data)
             self.assertIn('"messageTemplate"', release_data)
             self.assertIn("{{RELEASE_ZIP_SHA256}}", release_data)
-            self.assertIn('"packageVersion": "0.1.0"', release_data)
-            self.assertIn('"releaseTag": "v0.1.0"', release_data)
+            self.assertIn('"packageVersion": "0.2.0"', release_data)
+            self.assertIn('"releaseTag": "v0.2.0"', release_data)
 
     def test_release_builder_requires_clean_tagged_git_head(self) -> None:
         builder = load_script("build_release")
@@ -287,7 +354,7 @@ class SetupRepositoryTests(unittest.TestCase):
                 ["git", "config", "user.name", "Release Test"],
                 ["git", "add", "."],
                 ["git", "commit", "-m", "test release"],
-                ["git", "tag", "v0.1.0"],
+                ["git", "tag", "v0.2.0"],
                 ["git", "remote", "add", "origin", "https://github.com/example/example.git"],
             ]
             for command in commands:
@@ -304,12 +371,12 @@ class SetupRepositoryTests(unittest.TestCase):
             builder.PLUGIN_MANIFEST = (
                 source / "plugins/sermon-slide-builder/.codex-plugin/plugin.json"
             )
-            release_url = "https://github.com/example/example/releases/tag/v0.1.0"
-            builder.validate_git_state(release_url, commit, "v0.1.0")
+            release_url = "https://github.com/example/example/releases/tag/v0.2.0"
+            builder.validate_git_state(release_url, commit, "v0.2.0")
 
             (source / "README.md").write_text("dirty\n", encoding="utf-8")
             with self.assertRaises(ValueError):
-                builder.validate_git_state(release_url, commit, "v0.1.0")
+                builder.validate_git_state(release_url, commit, "v0.2.0")
 
     def test_setup_ui_never_persists_clipboard_readiness(self) -> None:
         app = (REPO_ROOT / "setup-ui/app.js").read_text(encoding="utf-8")

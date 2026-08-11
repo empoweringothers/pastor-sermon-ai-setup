@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Pastor Work"
+  short_description: "Check pastor deliverables before they are used"
+  default_prompt: "Use $review-pastor-work to review this sermon deliverable and identify what needs fixing."
