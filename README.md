@@ -69,13 +69,17 @@ review and publish a shared plugin update.
 
 ## Give this to a pastor
 
-1. Publish this source folder in a GitHub repository.
-2. Choose a license and create an immutable tagged release.
-3. Use the release builder to produce a pastor ZIP, checksum, and completed
-   paste message pinned to that release and commit.
-4. Send the generated paste message and release ZIP to the pastor. Tell the
-   pastor to paste the plain-text message first and not unzip, run, or open the
-   launcher until ChatGPT verifies the release.
+Use the [verified v0.2.0 release](https://github.com/empoweringothers/pastor-sermon-ai-setup/releases/tag/v0.2.0):
+
+1. Download `PASTOR-SETUP-MESSAGE.txt` from the release.
+2. Paste that message into the pastor's own ChatGPT account.
+3. Follow one verified question, permission request, or action at a time.
+4. Download the release ZIP only when the assistant asks for it.
+
+The paste message pins the publisher, tag, full commit, ZIP filename, and
+SHA-256 checksum. Do not install from the mutable `main` branch. Maintainers can
+use [`PUBLISHING-CHECKLIST.md`](PUBLISHING-CHECKLIST.md) to prepare a future
+release.
 
 The pastor may start in ordinary ChatGPT. If that chat cannot inspect or change
 the local computer, the assistant will guide the pastor into the desktop app's
